@@ -11,7 +11,7 @@ The Docker image is published to `paritytech/srtool` on Docker Hub with tags lik
 ## Key Files
 
 - `VERSION` — srtool version (e.g., 0.18.4)
-- `RUSTC_VERSION` — Rust toolchain version pinned for deterministic builds (e.g., 1.93.0)
+- `RUSTC_VERSION` — Rust toolchain version pinned for deterministic builds (e.g., 1.98.1)
 - `Dockerfile` — Container image definition
 - `justfile` — Build automation (uses `just`, not `make`)
 
