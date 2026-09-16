@@ -4,6 +4,10 @@ on:
     tags:
       - "v*"
 
+env:
+  # DockerHub image path (independent of the GitHub org)
+  REPO: midnightntwrk/srtool
+
 jobs:
   build:
     name: Build Srtool Docker image
@@ -73,7 +77,6 @@ jobs:
       - name: Render release notes
         run: |
           export CHANGELOG=$(cat changelog.md)
-          export REPO=${{ github.REPOSITORY }}
           export TAG=$RUSTC_VERSION-$SRTOOL_VERSION
           tera --env --env-only --template templates/release.md > RELEASE_NOTES.md
 
@@ -113,8 +116,6 @@ jobs:
           echo "RUSTC_VERSION=$RUSTC_VERSION" >> $GITHUB_ENV
 
       - name: Tag image
-        env:
-          REPO: ${{ github.REPOSITORY }}
         run: |
           docker tag srtool $REPO:$RUSTC_VERSION-$SRTOOL_VERSION
           docker tag srtool $REPO:$RUSTC_VERSION
@@ -124,12 +125,10 @@ jobs:
       - name: Log into Docker Hub
         uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee #v4.2.0
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKERHUB_MIDNIGHTNTWRK_USER }}
+          password: ${{ secrets.DOCKERHUB_MIDNIGHTNTWRK_TOKEN }}
 
       - name: Push Docker image
-        env:
-          REPO: ${{ github.REPOSITORY }}
         run: |
           docker push $REPO:$RUSTC_VERSION-$SRTOOL_VERSION
           docker push $REPO:$RUSTC_VERSION
